@@ -1,0 +1,363 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(0.985 0 0);
+  --muted: oklch(0.965 0 0);
+  --muted-foreground: oklch(0.5 0 0);
+  --border: oklch(0.915 0 0);
+  --ring: oklch(0.708 0 0);
+  --pattern: color-mix(in oklab, var(--foreground) 7%, transparent);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.18 0 0);
+  --muted: oklch(0.21 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --border: oklch(0.269 0 0);
+  --ring: oklch(0.556 0 0);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  html {
+    min-width: 360px;
+    scrollbar-gutter: stable;
+    overflow-x: clip;
+    scroll-behavior: smooth;
+  }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+  }
+  ::selection {
+    background: color-mix(in oklab, var(--foreground) 15%, transparent);
+  }
+  h1, h2, h3, h4 {
+    text-wrap: balance;
+  }
+}
+
+/* ── Đường kẻ ngang kéo dài hết màn hình (screen-line) ── */
+.screen-line-top,
+.screen-line-bottom {
+  position: relative;
+}
+.screen-line-top::before,
+.screen-line-bottom::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 100vw;
+  margin-left: -50vw;
+  height: 1px;
+  background: var(--border);
+  pointer-events: none;
+}
+.screen-line-top::before {
+  top: 0;
+}
+.screen-line-bottom::after {
+  bottom: 0;
+}
+
+/* ── Dải sọc chéo ngăn cách các khối ── */
+.pattern {
+  background-image: repeating-linear-gradient(
+    315deg,
+    var(--pattern) 0,
+    var(--pattern) 1px,
+    transparent 0,
+    transparent 50%
+  );
+  background-size: 10px 10px;
+}
+
+/* ── Nội dung bài viết ── */
+.post-body {
+  --tw-prose-body: var(--foreground);
+  --tw-prose-headings: var(--foreground);
+  --tw-prose-lead: var(--muted-foreground);
+  --tw-prose-links: var(--foreground);
+  --tw-prose-bold: var(--foreground);
+  --tw-prose-counters: var(--muted-foreground);
+  --tw-prose-bullets: var(--muted-foreground);
+  --tw-prose-hr: var(--border);
+  --tw-prose-quotes: var(--foreground);
+  --tw-prose-quote-borders: var(--border);
+  --tw-prose-captions: var(--muted-foreground);
+  --tw-prose-code: var(--foreground);
+  --tw-prose-th-borders: var(--border);
+  --tw-prose-td-borders: var(--border);
+}
+
+.post-body h2,
+.post-body h3 {
+  scroll-margin-top: 5rem;
+  letter-spacing: -0.015em;
+}
+.post-body a {
+  text-underline-offset: 4px;
+  text-decoration-color: color-mix(in oklab, var(--foreground) 35%, transparent);
+}
+.post-body a:hover {
+  text-decoration-color: var(--foreground);
+}
+.post-body img {
+  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+}
+
+/* Code inline */
+.post-body :not(pre) > code {
+  background: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  padding: 0.12em 0.4em;
+  font-size: 0.85em;
+  font-weight: 500;
+  font-family: var(--font-mono);
+}
+.post-body :not(pre) > code::before,
+.post-body :not(pre) > code::after {
+  content: none;
+}
+
+/* Callout: <aside> */
+.post-body aside {
+  margin: 1.5em 0;
+  padding: 0.25em 1.1em;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--card);
+}
+
+/* Code block (Shiki) */
+.post-body pre.shiki {
+  margin: 0;
+  padding: 1rem 0;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  font-family: var(--font-mono);
+  background-color: var(--shiki-light-bg);
+  color: var(--shiki-light);
+}
+.post-body pre.shiki span {
+  color: var(--shiki-light);
+}
+.dark .post-body pre.shiki {
+  background-color: var(--shiki-dark-bg);
+  color: var(--shiki-dark);
+}
+.dark .post-body pre.shiki span {
+  color: var(--shiki-dark);
+}
+.post-body pre.shiki code {
+  display: grid;
+  font-family: inherit;
+  background: none;
+  padding: 0;
+  border: 0;
+}
+.post-body pre.shiki .line {
+  padding: 0 1rem;
+  min-height: 1.7em;
+}
+.post-body pre.shiki .line.highlighted {
+  background: color-mix(in oklab, var(--foreground) 9%, transparent);
+  box-shadow: inset 2px 0 0 var(--foreground);
+}
+.post-body pre.shiki.has-focused .line:not(.focused) {
+  opacity: 0.5;
+  transition: opacity 0.3s;
+}
+.post-body pre.shiki.has-focused:hover .line:not(.focused) {
+  opacity: 1;
+}
+
+.code-block {
+  position: relative;
+  margin: 1.5em 0;
+}
+.code-block .code-lang {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.75rem;
+  z-index: 1;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--muted-foreground);
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+.code-block:hover .code-lang {
+  opacity: 0;
+}
+.code-block .copy-btn {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.5rem;
+  z-index: 2;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: var(--background);
+  color: var(--muted-foreground);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s, color 0.2s;
+}
+.code-block:hover .copy-btn,
+.code-block .copy-btn:focus-visible {
+  opacity: 1;
+}
+.code-block .copy-btn:hover {
+  color: var(--foreground);
+}
+
+/* Editor */
+.editor-textarea {
+  tab-size: 2;
+}
+
+/* Hiệu ứng mở popover / command menu */
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.popover-anim[data-state="open"],
+.cmd-dialog {
+  animation: pop-in 0.15s ease-out;
+}
+.cmd-overlay {
+  animation: fade-in 0.15s ease-out;
+}
+
+/* ── Trình soạn trực quan (kiểu Notion) ── */
+.rich-editor > :first-child {
+  margin-top: 0;
+}
+.rich-editor .is-empty::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  color: var(--muted-foreground);
+  opacity: 0.6;
+}
+.rich-editor pre {
+  background: var(--muted);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+.rich-editor pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+}
+.rich-editor img {
+  max-width: 100%;
+  height: auto;
+}
+.rich-editor .ProseMirror-selectednode {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 0.5rem;
+}
+.rich-editor ul[data-type="taskList"] {
+  list-style: none;
+  padding-left: 0;
+}
+.rich-editor ul[data-type="taskList"] li {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+}
+.rich-editor ul[data-type="taskList"] li > label {
+  margin-top: 0.35rem;
+  user-select: none;
+}
+.rich-editor ul[data-type="taskList"] li > div {
+  flex: 1;
+}
+.rich-editor ul[data-type="taskList"] li > div > p {
+  margin: 0.25rem 0;
+}
+.rich-editor table {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+}
+.rich-editor th,
+.rich-editor td {
+  border: 1px solid var(--border);
+  padding: 0.4rem 0.7rem;
+  vertical-align: top;
+  position: relative;
+}
+.rich-editor th {
+  background: var(--muted);
+  text-align: left;
+}
+.rich-editor .selectedCell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: color-mix(in oklab, var(--foreground) 10%, transparent);
+  pointer-events: none;
+}
+.rich-editor aside {
+  margin: 1.5em 0;
+  padding: 0.25em 1.1em;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--card);
+}
